@@ -34,7 +34,7 @@ Desativar: Opção para desativar temporariamente o acesso de um usuário, ideal
 
 Excluir: Permite excluir permanentemente um usuário do sistema, removendo seu acesso e garantindo que apenas pessoas autorizadas possam operar o sistema.
 
-Benefícios do Sistema
+Benefícios do Sistema:
 Este sistema de gerenciamento foi projetado para otimizar a operação do hotel ou pousada, reduzindo o tempo gasto com processos administrativos e minimizando erros manuais. Com uma interface intuitiva, o sistema possibilita:
 
 Maior organização na gestão de reservas e ocupação dos quartos.
