@@ -14,8 +14,6 @@ Listar Cômodos: Mostra uma lista de todos os quartos, suítes ou outras acomoda
 
 Verificar Cômodo: Permite verificar a disponibilidade de um cômodo específico, ideal para auxiliar o cliente na escolha da acomodação desejada. Mostra o status atual (livre, ocupado, em manutenção) e o período de disponibilidade.
 
-Ver Cômodo: Exibe informações detalhadas sobre um cômodo, incluindo fotos, descrição, capacidade máxima, comodidades (ar-condicionado, TV, Wi-Fi, etc.) e histórico de ocupação recente.
-
 3. Reserva
 Buscar Reserva: Permite encontrar reservas específicas com base em critérios como nome do cliente, data de entrada ou número da reserva, facilitando o acompanhamento e a gestão das reservas já feitas.
 
