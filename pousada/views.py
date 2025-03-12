@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework import status, response
@@ -101,11 +102,12 @@ def incluir_reserva(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Cancelar Reserva
-@api_view(['DELETE'])
+@api_view(['PATCH'])
 def cancelar_reserva(request, reserva_id):
     try:
         reserva = Reserva.objects.get(id=reserva_id)
-        reserva.delete()
+        reserva.status = "cancelada"
+        reserva.save()
         return Response({"mensagem": "Reserva cancelada com sucesso"}, status=status.HTTP_204_NO_CONTENT)
     except Reserva.DoesNotExist:
         return Response(
@@ -114,7 +116,7 @@ def cancelar_reserva(request, reserva_id):
         )
 
 # Alterar Reserva
-@api_view(['PUT'])
+@api_view(['PUT','PATCH'])
 def alterar_reserva(request, reserva_id):
     try:
         reserva = Reserva.objects.get(id=reserva_id)
@@ -143,30 +145,36 @@ def cadastro_usuario(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Alterar Senha
-@api_view(['PUT'])
+@api_view(['GET', 'PUT'])
 def alterar_senha(request, user_id):
     try:
-        usuario = User.objects.get(id=user_id)
+        usuario = User.objects.get(id=user_id)  # Busca o usuário pelo ID
     except User.DoesNotExist:
-        return Response(
-            {"erro": "Usuário não encontrado"},
-            status=status.HTTP_404_NOT_FOUND
-        )
+        return Response({"erro": "Usuário não encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
+    # Se for um GET, apenas retorna os detalhes do usuário
+    if request.method == 'GET':
+        return Response({"mensagem": "Usuário encontrado", "username": usuario.username}, status=status.HTTP_200_OK)
+
+    # Se for um PUT, altera a senha
+    senha_atual = request.data.get("senha_atual")
     nova_senha = request.data.get("nova_senha")
-    if not nova_senha:
-        return Response(
-            {"erro": "O campo 'nova_senha' é obrigatório"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
 
-    usuario.set_password(nova_senha)
+    if not senha_atual or not nova_senha:
+        return Response({"erro": "Os campos 'senha_atual' e 'nova_senha' são obrigatórios"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Verifica se a senha atual está correta
+    if not check_password(senha_atual, usuario.password):
+        return Response({"erro": "Senha atual incorreta"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Evita que o usuário defina a mesma senha
+    if senha_atual == nova_senha:
+        return Response({"erro": "A nova senha não pode ser igual à senha atual"}, status=status.HTTP_400_BAD_REQUEST)
+
+    usuario.set_password(nova_senha)  # Atualiza a senha com criptografia
     usuario.save()
 
-    return Response(
-        {"mensagem": "Senha alterada com sucesso"},
-        status=status.HTTP_200_OK
-    )
+    return Response({"mensagem": "Senha alterada com sucesso"}, status=status.HTTP_200_OK)
 
 
 # Desativar Usuário

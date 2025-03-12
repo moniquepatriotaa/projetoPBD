@@ -17,11 +17,18 @@ class Cliente(models.Model):
 
 
 class Comodo(models.Model):
+    class Tipos (models.TextChoices):
+        quarto_individual = "quarto_individual", "Quarto Individual"
+        quarto_casal = "quarto_casal", "Quarto Casal"
+        quarto_conjunto = "quarto_conjunto", "Quarto conjunto"
+        quato_familia =   "quato_familia" , "Quarto Familia"
+
     numero = models.CharField(max_length=10)
-    tipo = models.CharField(max_length=50)
+    tipo = models.CharField(max_length=50,choices=Tipos.choices)
     descricao = models.TextField(blank=True)
     preco_diaria = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=10, choices=[('livre', 'Livre'), ('ocupado', 'Ocupado'), ('manutencao', 'Em manutenção')])
+
 
     def __str__(self):
         return f"{self.numero} - {self.tipo}"
